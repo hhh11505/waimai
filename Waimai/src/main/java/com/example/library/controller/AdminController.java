@@ -45,13 +45,12 @@ public class AdminController {
 
 
 
-    //进入登录页面（地址：localhost:8080/library/admin/login）
     @RequestMapping("/login")
     public String login(){
 
         return "admin/login";
     }
-    //登录(1代表管理员，2代表学生)
+
     @RequestMapping("/dologin")
     @ResponseBody
     public String dologin(@RequestParam("stuid") String stuid, @RequestParam("password")String password, @RequestParam("role")int role, HttpSession session){
@@ -75,13 +74,13 @@ public class AdminController {
         }
         return "false";
     }
-    //学生登录成功后跳转首页
+  
     @RequestMapping("student")
     public String toStudent(){
 
         return "admin/student";
     }
-    //管理员登录成功后跳转首页
+
     @RequestMapping("admin")
     public String toAdmin(){
 
@@ -93,34 +92,32 @@ public class AdminController {
 
         return "admin/addadmin";
     }
-    //添加管理员
+   
     @RequestMapping("doaddadmin")
     public String doaddAdmin(Admin admin){
-        //使用md5加密算法对密码加密
         admin.setPassword(DigestUtils.md5DigestAsHex(admin.getPassword().getBytes()));
         adService.addAdmin(admin);
         return "admin/toadmin";
     }
-    //跳转到图书管理页面
     @RequestMapping("booklist")
     public String findAllBooks(Map map){
         List<Book> booklist = bookService.findAllBooks();
         map.put("booklist",booklist);
         return "admin/booklist";
     }
-    //删除图书
+
     @RequestMapping("delete")
     public String delete(@RequestParam("bid") int bid){
         bookService.deleteBookById(bid);
         return "redirect:booklist";
     }
-    //跳转到添加图书页面
+
     @RequestMapping("addbookUI")
     public String addbookUI(){
 
         return "admin/addBookUI";
     }
-    //添加图书
+  
     @RequestMapping("addbook")
     @ResponseBody
     public String addbook(@RequestParam("bookname") String bookname, @RequestParam("author") String author, @RequestParam("type") String type, @RequestParam("publisher") String publisher, @RequestParam("publicationdate") String publicationdate, @RequestParam("price") int price, @RequestParam("state") String state, @RequestParam("comment") String comment) throws ParseException {
@@ -144,14 +141,12 @@ public class AdminController {
             return "error";
         }
     }
-    //进入用户管理页面
     @RequestMapping("findAllStu")
     public String findAllStu(Map map){
         List<User> userlist = uService.findAllStu();
         map.put("userlist",userlist);
         return "admin/userlist";
     }
-    //进入借阅信息页面(管理员）
     @RequestMapping("allBorrowbooks")
     public String findallBorrowbooks(Map map){
         List<Borrow> allBorrowbooks= borrowService.findallBorrowbooks();
@@ -159,14 +154,13 @@ public class AdminController {
         return "admin/allBorrowbooks";
     }
 
-    //跳转到图书页面(学生)
+  
     @RequestMapping("borrowbooklist")
     public String borrowbooklist(Map map){
         List<Book> booklist = bookService.findAllBooks();
         map.put("booklist",booklist);
         return "admin/borrowbooklist";
     }
-    //借阅图书
     @RequestMapping("borrowbook")
     public String borrowbook(@RequestParam("bookname")String bookname ,@RequestParam("bid")int bid ,HttpSession session) throws ParseException {
         Borrow borrow = new Borrow();
@@ -176,13 +170,9 @@ public class AdminController {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String time = df.format(System.currentTimeMillis());
         borrow.setBorrowtime(time);
-        //添加进借阅表
-        borrowService.insertByBorrow(borrow);
-        //更新书籍表中的借阅状态（1表示未借阅，2表示已借阅）
         bookService.updateBookByBid(bid);
         return "redirect:borrowbooklist";
     }
-    //跳转查看我的借阅书籍页面
     @RequestMapping("myBorrow")
     public String myborrow(Map map,HttpSession session){
         String username = session.getAttribute("username").toString();
@@ -190,7 +180,6 @@ public class AdminController {
         map.put("borrowlist",borrowlist);
         return "admin/myborrow";
     }
-    //归还书籍
     @RequestMapping("returnbook")
     public String returnbook(@RequestParam("bid") int bid){
         //1.删除借阅表中bid=bid的记录
@@ -199,19 +188,16 @@ public class AdminController {
         bookService.upBookByBid(bid);
         return "redirect:myBorrow";
     }
-    //注销
     @RequestMapping("logout")
     public String logout(HttpSession session){
         session.invalidate();
         return "admin/login";
     }
-    //跳转到学生注册
     @RequestMapping("toregist")
     public String toregist(){
 
         return "admin/regist";
     }
-    //学生注册
     @RequestMapping("regist")
     public String regist(User user){
         String md5pwd = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
@@ -219,8 +205,6 @@ public class AdminController {
         uService.addUser(user);
         return "redirect:login";
     }
-
-    //骑手管理
     @RequestMapping("findAllQishou")
     public String findAllQishou(Map map){
         System.err.println("骑手管理。。。");
@@ -230,7 +214,6 @@ public class AdminController {
         return "admin/qishoulist";
     }
 
-    //骑手入账
     @RequestMapping("findAllQishouruzhang")
     public String findAllQishouruzhang(Map map){
         List<Qishouruzhang> qishouruzhanglist = qishouruzhangService.findAllQishouruzhang();
@@ -238,8 +221,6 @@ public class AdminController {
         map.put("qishouruzhanglist",qishouruzhanglist);
         return "admin/qishouruzhanglist";
     }
-
-    //用户信息管理
     @RequestMapping("findAllYonghuxinxi")
     public String findAllYonghuxinxi(Map map){
         System.err.println("用户信息管理。。。");
@@ -249,8 +230,6 @@ public class AdminController {
         return "admin/yonghuxinxilist";
     }
 
-
-    //优惠券信息
     @RequestMapping("findAllYouhuiquanxinxi")
     public String findAllYouhuiquanxinxi(Map map){
         List<Youhuiquanxinxi> youhuiquanxinxilist = youhuiquanxinxiService.findAllYouhuiquanxinxi();
@@ -259,7 +238,6 @@ public class AdminController {
         return "admin/youhuiquanxinxilist";
     }
 
-    //配送地址
     @RequestMapping("findAllPeisongdizhi")
     public String findAllPeisongdizhi(Map map){
         List<Peisongdizhi> peisongdizhilist = peisongdizhiService.findAllPeisongdizhi();
