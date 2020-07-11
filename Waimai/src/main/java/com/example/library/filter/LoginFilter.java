@@ -28,23 +28,21 @@ public class LoginFilter implements Filter {
 //        System.err.println("url1"+url);
 //        System.out.println(url.equals(projectName+"/admin/login"));
 //        System.out.println(url.equals(projectName+"/admin/dologin"));
-        //放行静态资源
         if(url.contains("style")){
-            chain.doFilter(hsr, hsp);//合法，放行
+            chain.doFilter(hsr, hsp);
         }
-        //判断访问路径是否符合逻辑
         if(url.equals(projectName+"/admin/login")||url.equals(projectName+"/admin/dologin")||url.equals(projectName+"/admin/regist")||url.equals(projectName+"/admin/toregist")) {//判断请求地址是否合法
-            chain.doFilter(hsr, hsp);//合法，放行
+            chain.doFilter(hsr, hsp);
             return;
-        }else {//不合法，判断是否已登陆过
+        }else {
             String username = (String) hsr.getSession().getAttribute("username");
 //            System.out.println(username);
             if(username!=null) {
 //                System.err.println("url2"+url);
-                chain.doFilter(hsr, hsp);//已登录，放行
+                chain.doFilter(hsr, hsp);
                 return;
             }else {
-                hsp.sendRedirect(projectName+"/admin/login");//未登录，跳转到登录页面
+                hsp.sendRedirect(projectName+"/admin/login");
 
             }
         }
