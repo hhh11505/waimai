@@ -31,7 +31,7 @@ public class LoginFilter implements Filter {
         if(url.contains("style")){
             chain.doFilter(hsr, hsp);
         }
-        if(url.equals(projectName+"/admin/login")||url.equals(projectName+"/admin/dologin")||url.equals(projectName+"/admin/regist")||url.equals(projectName+"/admin/toregist")) {//判断请求地址是否合法
+        if(url.equals(projectName+"/admin/login")||url.equals(projectName+"/admin/dologin")||url.equals(projectName+"/admin/regist")||url.equals(projectName+"/admin/toregist")) {
             chain.doFilter(hsr, hsp);
             return;
         }else {
